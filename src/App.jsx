@@ -2,6 +2,7 @@ import { Link, Routes, Route, useParams } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import Header from "./components/Header.jsx";
 
 function ListingPage() {
   const { id } = useParams();
@@ -23,7 +24,9 @@ function ProfilePage() {
 
 function App() {
   return (
-    <Routes>
+    <>
+      <Header />
+      <Routes>
       <Route
         path="/"
         element={
@@ -106,6 +109,7 @@ function App() {
         }
       />
     </Routes>
+    </>
   );
 }
 
