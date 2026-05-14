@@ -3,17 +3,10 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
 import Sell from "./pages/Sell.jsx";
+import ListingDetail from "./pages/ListingDetail.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import Header from "./components/Header.jsx";
 
-function ListingPage() {
-  const { id } = useParams();
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-      Listing page: {id}
-    </div>
-  );
-}
 
 function ProfilePage() {
   const { userId } = useParams();
@@ -40,7 +33,7 @@ function App() {
           </div>
         }
       />
-      <Route path="/listing/:id" element={<ListingPage />} />
+      <Route path="/listing/:id" element={<ListingDetail />} />
       <Route path="/profile/:userId" element={<ProfilePage />} />
       <Route
         path="/search/image"
