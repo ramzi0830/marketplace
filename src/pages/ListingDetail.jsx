@@ -77,7 +77,7 @@ function ListingDetail() {
       if (listingData.category) {
         const { data: similarData } = await supabase
           .from("listings")
-          .select("*")
+          .select("*, listing_images(*)")
           .eq("category", listingData.category)
           .eq("status", "active")
           .neq("id", id)
