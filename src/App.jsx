@@ -29,24 +29,10 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/browse"
-        element={
-          <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-            Browse page
-          </div>
-        }
-      />
+      <Route path="/browse" element={<Browse />} />
       <Route path="/listing/:id" element={<ListingDetail />} />
       <Route path="/profile/:userId" element={<ProfilePage />} />
-      <Route
-        path="/search/image"
-        element={
-          <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-            Image search page
-          </div>
-        }
-      />
+      <Route path="/search/image" element={<ImageSearch />} />
       <Route
         path="/sell"
         element={
