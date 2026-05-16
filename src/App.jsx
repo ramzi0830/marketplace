@@ -6,6 +6,7 @@ import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
 import Sell from "./pages/Sell.jsx";
 import ListingDetail from "./pages/ListingDetail.jsx";
+import Liked from "./pages/Liked.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import Header from "./components/Header.jsx";
 
@@ -53,9 +54,7 @@ function App() {
           path="/liked"
           element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-                Liked page (protected)
-              </div>
+              <Liked />
             </ProtectedRoute>
           }
         />
