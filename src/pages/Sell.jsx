@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { getImageEmbedding } from "../lib/embeddings";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const categories = ["Clothing", "Vinyl", "CD", "VHS", "Other"];
@@ -61,6 +62,7 @@ export default function Sell() {
   const [dragIndex, setDragIndex] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [embeddingStatus, setEmbeddingStatus] = useState("");
 
   const measurementsForSubcategory = useMemo(() => {
     if (category !== "Clothing") return [];
@@ -124,6 +126,12 @@ export default function Sell() {
   async function handleSubmit(event) {
     event.preventDefault();
     if (!canSubmit || submitting) return;
+
+    if (!user?.id) {
+      setError("You must be logged in to list an item.");
+      navigate("/login");
+      return;
+    }
 
     setError("");
     setSubmitting(true);
@@ -217,6 +225,35 @@ export default function Sell() {
 
       if (imagesError) {
         throw imagesError;
+      }
+
+      if (imagesToInsert.length > 0) {
+        setEmbeddingStatus("Adding to search index...");
+        try {
+          const firstImageUrl = imagesToInsert[0].url;
+          const blob = await fetch(firstImageUrl).then((res) => {
+            if (!res.ok) {
+              throw new Error(`Failed to fetch image blob: ${res.status}`);
+            }
+            return res.blob();
+          });
+          const embedding = await getImageEmbedding(blob);
+
+          if (embedding !== null) {
+            const { error: embeddingUpdateError } = await supabase
+              .from("listings")
+              .update({ image_embedding: embedding })
+              .eq("id", listingId);
+
+            if (embeddingUpdateError) {
+              console.warn("Failed to save image embedding:", embeddingUpdateError);
+            }
+          }
+        } catch (embeddingError) {
+          console.warn("Failed to generate image embedding:", embeddingError);
+        } finally {
+          setEmbeddingStatus("");
+        }
       }
 
       navigate(`/listing/${listingId}`);
@@ -544,6 +581,9 @@ export default function Sell() {
             <div className="rounded-3xl border border-red-600/40 bg-red-600/10 p-4 text-sm text-red-100">
               {error}
             </div>
+          )}
+          {embeddingStatus && (
+            <div className="text-sm text-white/70">{embeddingStatus}</div>
           )}
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -7,6 +7,7 @@ import ListingCard from "../components/ListingCard.jsx";
 
 function ListingDetail() {
   const { id } = useParams();
+  const listingId = id;
   const navigate = useNavigate();
   const { user } = useAuth();
   const [listing, setListing] = useState(null);
@@ -101,7 +102,7 @@ function ListingDetail() {
     let mounted = true;
 
     async function fetchLikeStatus() {
-      if (!user || !id) {
+      if (!user?.id) {
         if (mounted) {
           setLiked(false);
         }
@@ -112,7 +113,7 @@ function ListingDetail() {
         .from("likes")
         .select("id")
         .eq("user_id", user.id)
-        .eq("listing_id", id)
+        .eq("listing_id", listingId)
         .single();
 
       if (!mounted) return;
@@ -124,7 +125,7 @@ function ListingDetail() {
     return () => {
       mounted = false;
     };
-  }, [user, id]);
+  }, [user, listingId]);
 
   const handleToggleLike = async () => {
     if (!user) {

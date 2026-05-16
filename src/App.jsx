@@ -1,3 +1,5 @@
+import Browse from "./pages/Browse.jsx";
+import ImageSearch from "./pages/ImageSearch.jsx";
 import { Routes, Route, useParams } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
@@ -22,56 +24,42 @@ function App() {
     <>
       <Header />
       <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/browse"
-        element={
-          <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-            Browse page
-          </div>
-        }
-      />
-      <Route path="/listing/:id" element={<ListingDetail />} />
-      <Route path="/profile/:userId" element={<ProfilePage />} />
-      <Route
-        path="/search/image"
-        element={
-          <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-            Image search page
-          </div>
-        }
-      />
-      <Route
-        path="/sell"
-        element={
-          <ProtectedRoute>
-            <Sell />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/cart"
-        element={
-          <ProtectedRoute>
-            <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-              Cart page (protected)
-            </div>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/liked"
-        element={
-          <ProtectedRoute>
-            <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
-              Liked page (protected)
-            </div>
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/listing/:id" element={<ListingDetail />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
+        <Route path="/search/image" element={<ImageSearch />} />
+        <Route
+          path="/sell"
+          element={
+            <ProtectedRoute>
+              <Sell />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
+                Cart page (protected)
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/liked"
+          element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center text-2xl">
+                Liked page (protected)
+              </div>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </>
   );
 }
