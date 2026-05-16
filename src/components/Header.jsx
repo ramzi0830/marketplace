@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Heart, ShoppingCart, Menu, X, Camera, LogOut, ChevronDown, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabase";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -35,6 +38,78 @@ export default function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Fetch and subscribe to likes and cart counts
+  useEffect(() => {
+    if (!user) {
+      setLikeCount(0);
+      setCartCount(0);
+      return;
+    }
+
+    // Fetch initial counts
+    const fetchCounts = async () => {
+      try {
+        const [likesRes, cartRes] = await Promise.all([
+          supabase
+            .from("likes")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id),
+          supabase
+            .from("cart_items")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id),
+        ]);
+
+        if (likesRes.count !== null) setLikeCount(likesRes.count);
+        if (cartRes.count !== null) setCartCount(cartRes.count);
+      } catch (error) {
+        console.error("Error fetching counts:", error);
+      }
+    };
+
+    fetchCounts();
+
+    // Subscribe to realtime changes for likes
+    const likesChannel = supabase
+      .channel(`likes-changes-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "likes",
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchCounts();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to realtime changes for cart items
+    const cartChannel = supabase
+      .channel(`cart-changes-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "cart_items",
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchCounts();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscriptions
+    return () => {
+      supabase.removeChannel(likesChannel);
+      supabase.removeChannel(cartChannel);
+    };
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-50 bg-[#0a0a0a] text-white border-b border-white/10">
@@ -75,19 +150,29 @@ export default function Header() {
             {/* Heart Icon */}
             <Link
               to="/liked"
-              className="text-gray-300 hover:text-[#e10600] transition"
+              className="relative text-gray-300 hover:text-[#e10600] transition"
               aria-label="Liked items"
             >
               <Heart size={20} />
+              {likeCount > 0 && (
+                <div className="absolute -top-2 -right-2 flex items-center justify-center w-[18px] h-[18px] bg-[#e10600] text-white text-xs font-bold rounded-full">
+                  {likeCount > 99 ? "99+" : likeCount}
+                </div>
+              )}
             </Link>
 
             {/* Shopping Cart Icon */}
             <Link
               to="/cart"
-              className="text-gray-300 hover:text-[#e10600] transition"
+              className="relative text-gray-300 hover:text-[#e10600] transition"
               aria-label="Shopping cart"
             >
               <ShoppingCart size={20} />
+              {cartCount > 0 && (
+                <div className="absolute -top-2 -right-2 flex items-center justify-center w-[18px] h-[18px] bg-[#e10600] text-white text-xs font-bold rounded-full">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </div>
+              )}
             </Link>
 
             {/* User Section */}
@@ -181,19 +266,29 @@ export default function Header() {
             {/* Mobile Nav Links */}
             <Link
               to="/liked"
-              className="flex items-center gap-2 text-gray-300 hover:text-[#e10600] transition py-2"
+              className="relative flex items-center gap-2 text-gray-300 hover:text-[#e10600] transition py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Heart size={20} />
+              {likeCount > 0 && (
+                <div className="flex items-center justify-center w-[18px] h-[18px] bg-[#e10600] text-white text-xs font-bold rounded-full">
+                  {likeCount > 99 ? "99+" : likeCount}
+                </div>
+              )}
               <span>Liked items</span>
             </Link>
 
             <Link
               to="/cart"
-              className="flex items-center gap-2 text-gray-300 hover:text-[#e10600] transition py-2"
+              className="relative flex items-center gap-2 text-gray-300 hover:text-[#e10600] transition py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               <ShoppingCart size={20} />
+              {cartCount > 0 && (
+                <div className="flex items-center justify-center w-[18px] h-[18px] bg-[#e10600] text-white text-xs font-bold rounded-full">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </div>
+              )}
               <span>Cart</span>
             </Link>
 
