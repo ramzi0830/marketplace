@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase.js";
 import { getImageEmbedding } from "../lib/embeddings.js";
 import ListingCard from "../components/ListingCard.jsx";
 
-const CATEGORY_OPTIONS = ["Clothing", "Vinyl", "CD", "VHS", "Other"];
+const CATEGORY_OPTIONS = ["Clothing", "Vinyl", "CD", "Jewelry", "Other"];
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "Numeric"];
 const GENDER_OPTIONS = ["", "men", "women", "unisex"];
 

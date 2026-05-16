@@ -242,7 +242,7 @@ function ListingDetail() {
 
   const clothingMeasurements = measurements && typeof measurements === "object" ? measurements : null;
   const isClothing = category.toLowerCase() === "clothing";
-  const isMedia = ["vinyl", "cd", "vhs"].includes(category.toLowerCase());
+  const isMedia = ["vinyl", "cd", "jewelry"].includes(category.toLowerCase());
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white px-4 py-8">

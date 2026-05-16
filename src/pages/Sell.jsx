@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabase";
 import { getImageEmbedding } from "../lib/embeddings";
 import { useAuth } from "../context/AuthContext.jsx";
 
-const categories = ["Clothing", "Vinyl", "CD", "VHS", "Other"];
+const categories = ["Clothing", "Vinyl", "CD", "Jewelry", "Other"];
 const clothingGenders = ["men", "women", "unisex"];
 const clothingSubcategories = ["shirt", "pants", "shoes", "jacket", "hat", "other"];
 const clothingConditions = [
@@ -168,7 +168,7 @@ export default function Sell() {
         },
         {}
       );
-    } else if (["Vinyl", "CD", "VHS"].includes(category)) {
+    } else if (["Vinyl", "CD", "Jewelry"].includes(category)) {
       listingPayload.condition = condition;
       listingPayload.measurements = {
         artist_title: artistTitle.trim() || null,

@@ -39,13 +39,13 @@ const Home = () => {
     fetchListings();
   }, []);
 
-  const categories = ['Clothing', 'Vinyl', 'CDs', 'VHS', 'Other'];
+  const categories = ['Clothing', 'Vinyl', 'CDs', 'Jewelry', 'Other'];
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Hero Section */}
       <section className="py-20 px-4 text-center">
-        <h1 className="text-5xl font-bold mb-4">Buy + sell clothing, vinyl, CDs, and VHS</h1>
+        <h1 className="text-5xl font-bold mb-4">Buy + sell clothing, vinyl, CDs, and Jewelry</h1>
       </section>
 
       {/* Categories */}

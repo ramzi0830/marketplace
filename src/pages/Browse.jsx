@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import ListingCard from "../components/ListingCard.jsx";
 
-const CATEGORY_OPTIONS = ["Clothing", "Vinyl", "CD", "VHS", "Other"];
+const CATEGORY_OPTIONS = ["Clothing", "Vinyl", "CD", "Jewelry", "Other"];
 const SUBCATEGORY_OPTIONS = ["Shirt", "Pants", "Shoes", "Jacket", "Hat", "Other"];
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "Numeric"];
 
